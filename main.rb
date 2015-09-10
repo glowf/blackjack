@@ -21,11 +21,11 @@ helpers do
   end
 
   def valid_bet?(bet)
-      bet <= session[:money] && bet > 0
+    bet <= session[:money] && bet > 0
   end
 
   def bankrupt?
-      session[:money] == 0
+    session[:money] == 0
   end
 end
 
