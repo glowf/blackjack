@@ -12,8 +12,8 @@
     <div class="box-dealer clearfix">
        <% if @result.nil? || @result == "bust" %>
           <ul class="list-cards">
-              <li><span class="card card-<%= session[:dealer_cards][0][0].downcase+session[:dealer_cards][0][1] %>"></span></li>
-              <li><span class="card"></span></li>
+            <li><span class="card card-<%= session[:dealer_cards][0][0].downcase+session[:dealer_cards][0][1] %>"></span></li>
+            <li><span class="card"></span></li>
           </ul>
        <% else %>
          <span class="total"><%= add_cards(session[:dealer_cards]) %></span>
@@ -27,9 +27,9 @@
 
     <div class="box-player clearfix" style="margin:0 auto;width:<%= session[:player_cards].size*160 %>px;">
       <% if !@result.nil? %>
-          <div class="box-result">
-            <span class="text-result text-<%= @result %>"><%= @result %></span>
-          </div><!--/box result-->
+         <div class="box-result">
+           <span class="text-result text-<%= @result %>"><%= @result %></span>
+         </div><!--/box result-->
       <% end %>
 
        <span class="total"><%= add_cards(session[:player_cards]) %></span>
@@ -44,10 +44,10 @@
       <div class="box-actions">
       <div class="row">
         <div class="span6 offset4">
-            <form method="post" action="/game/playermove">
-              <input type="submit" name="move" value="Hit" class="btn-move" />
-              <input type="submit" name="move" value="Stay" class="btn-move btn-move-stay" />
-            </form>
+           <form method="post" action="/game/playermove">
+             <input type="submit" name="move" value="Hit" class="btn-move" />
+             <input type="submit" name="move" value="Stay" class="btn-move btn-move-stay" />
+           </form>
           </div><!--/span-->
         </div><!--/row-->
         </div><!--/box actions-->
@@ -74,7 +74,6 @@
           <button class="btn btn-large btn-block btn-success" type="submit" name="deal">BET</button>
          </div><!--/span-->
      </div><!--/row-->
-
      </form>
      </div><!--/box bet-->
    <% end %>
@@ -82,11 +81,11 @@
    <% if @bankrupt %>
     <div class="box-gameover">
      <div class="row">
-        <div class="span5 offset4">
-          <%if @error %>
-            <div class="alert alert-error"><i class="icon  icon-exclamation-sign"></i> <%=@error%></div>
-          <% end %>
-         </div><!--/span-->
+       <div class="span5 offset4">
+         <%if @error %>
+           <div class="alert alert-error"><i class="icon  icon-exclamation-sign"></i> <%=@error%></div>
+         <% end %>
+       </div><!--/span-->
      </div><!--/row-->
      <div class="row">
        <div class="span5 offset4">
