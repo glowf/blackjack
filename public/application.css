@@ -79,13 +79,6 @@ body,html{height: 100%;}
   animation:         less-opacity 1s 0s forwards;
 }
 
-@-webkit-keyframes less-opacity {
-  0%   { opacity: 1; }
-  96%, 100% {
-        opacity:0.3;
-    }
-}
-
 .hide-cards .box-dealer,
 .hide-cards .box-player{
   display:none;
@@ -294,13 +287,6 @@ body,html{height: 100%;}
   animation:         blink-visible 3s  forwards;
 }
 
-@-webkit-keyframes blink-visible {
-  0%   { opacity: 0; }
-  96%, 100% {
-        opacity:1;
-    }
-}
-
 .text-player{
   width:420px;
   background-position:  0px -200px;
@@ -320,3 +306,47 @@ body,html{height: 100%;}
   width:440px;
   background-position:  0px -800px;
 }
+
+@-webkit-keyframes less-opacity {
+  0%        { opacity: 1; }
+  96%, 100% {opacity:0.3; }
+}
+@-webkit-keyframes less-opacity {
+  0%        { opacity: 1; }
+  96%, 100% {opacity:0.3; }
+}
+@-moz-keyframes less-opacity {
+  0%        { opacity: 1; }
+  96%, 100% {opacity:0.3; }
+}
+@-o-keyframes less-opacity {
+  0%        { opacity: 1; }
+  96%, 100% {opacity:0.3; }
+}
+@keyframes less-opacity{
+  0%        { opacity: 1; }
+  96%, 100% {opacity:0.3; }
+}
+
+@-webkit-keyframes blink-visible {
+  0%         { opacity: 0; }
+  96%, 100% { opacity:1; }
+}
+
+@-webkit-keyframes blink-visible {
+  0%        { opacity: 0; }
+  96%, 100% { opacity: 1; }
+}
+@-moz-keyframes blink-visible {
+  0%        { opacity: 0; }
+  96%, 100% { opacity: 1; }
+}
+@-o-keyframes blink-visible {
+  0%        { opacity: 0; }
+  96%, 100% { opacity: 1; }
+}
+@keyframes blink-visible{
+  0%        { opacity: 0; }
+  96%, 100% { opacity: 1; }
+}
+
