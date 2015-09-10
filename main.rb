@@ -15,9 +15,9 @@ helpers do
     total
   end
 
-  def take_bet(bet, money=MONEY)
+  def take_bet(bet)
     session[:bet]    = bet.to_i
-    session[:money]  = money - session[:bet]
+    session[:money]  -= session[:bet]
   end
 
   def deal(hand)
@@ -102,7 +102,7 @@ post '/game' do
     @show_player_moves, @show_bet = false, true
     halt erb :game
   end
-  take_bet(params[:bet],session[:money])
+  take_bet(params[:bet])
   redirect '/game'
 end
 
