@@ -1,0 +1,98 @@
+<div class="box-game clearfix <% if !@result.nil? %> result-shown <%end%> <% if @show_bet   %> hide-cards <%end%> ">
+<div class="row">
+
+  <div class="span12">
+
+    <% if @result.nil?  %>
+    <div class="box-money">
+      <p><%= session[:player]%>'s Cash: <span>$<%= session[:money] %></span></p>
+    </div><!--/money-->
+    <% end %>
+
+    <div class="box-dealer clearfix">
+       <% if @result.nil?  %>
+          <ul class="list-cards">
+              <li><span class="card card-<%= session[:dealer_cards][0][0].downcase+session[:dealer_cards][0][1] %>"></span></li>
+              <li><span class="card"></span></li>
+          </ul>
+       <% else %>
+         <span class="total"><%= add_cards(session[:dealer_cards]) %></span>
+         <ul class="list-cards dealer-cards clearfix">
+          <% session[:dealer_cards].each do |card| %>
+              <li><span class="card card-<%= card[0].downcase+card[1] %>"></span></li>
+          <% end%>
+         </ul>
+       <% end %>
+    </div><!--/box dealer-->
+
+    <div class="box-player clearfix" style="margin:0 auto;width:<%= session[:player_cards].size*160 %>px;">
+      <% if !@result.nil? %>
+          <div class="box-result">
+            <span class="text-result text-<%= @result %>"><%= @result %></span>
+          </div><!--/box result-->
+      <% end %>
+
+       <span class="total"><%= add_cards(session[:player_cards]) %></span>
+       <ul class="list-cards clearfix" >
+       <% session[:player_cards].each do |card| %>
+          <li><span class="card card-<%= card[0].downcase+card[1] %>"></span></li>
+       <% end%>
+      </ul>
+    </div><!--/box player-->
+
+    <% if @show_player_moves && !@bankrupt %>
+      <div class="box-actions">
+      <div class="row">
+        <div class="span6 offset4">
+            <form method="post" action="/game/playermove">
+              <input type="submit" name="move" value="Hit" class="btn-move" />
+              <input type="submit" name="move" value="Stay" class="btn-move btn-move-stay" />
+            </form>
+          </div><!--/span-->
+        </div><!--/row-->
+        </div><!--/box actions-->
+     </div><!--/span5-->
+   <% end %>
+
+   <% if (!@result.nil? || @show_bet) && !@bankrupt  %>
+     <div class="box-bet">
+     <form method="post" action="/game">
+     <div class="row">
+        <div class="span3 offset3">
+           <h2>You have <br />$<%= session[:money]%> </h2>
+        </div><!--/span 3-->
+        <div class="span3">
+          <%if @error %>
+            <div class="alert alert-error"><i class="icon  icon-exclamation-sign"></i> <%=@error%></div>
+          <% end %>
+          <div class="input-prepend">
+            <span class="add-on">$</span>
+            <input   type="text" name="bet" value="<%= session[:bet]%>" onfocus="this.value=''">
+          </div>
+          <button class="btn btn-large btn-block btn-success" type="submit" name="deal">BET</button>
+         </div><!--/span-->
+     </div><!--/row-->
+
+     </form>
+     </div><!--/box bet-->
+   <% end %>
+
+   <% if @bankrupt %>
+    <div class="box-gameover">
+     <div class="row">
+        <div class="span5 offset4">
+          <%if @error %>
+            <div class="alert alert-error"><i class="icon  icon-exclamation-sign"></i> <%=@error%></div>
+          <% end %>
+         </div><!--/span-->
+     </div><!--/row-->
+     <div class="row">
+       <div class="span5 offset4">
+          <a href="/" class="btn btn-large btn-block btn-success">RETRY</a>
+       </div>
+     </div><!--/row-->
+     </form>
+     </div><!--/box bet-->
+   <% end %>
+</div><!--/row-->
+</div><!--/box game-->
