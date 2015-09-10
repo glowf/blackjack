@@ -61,6 +61,7 @@ end
 
 get '/game/new' do
   session[:player] = nil
+  session[:money]  = MONEY
   redirect 'username'
 end
 
