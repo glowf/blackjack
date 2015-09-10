@@ -24,7 +24,7 @@ helpers do
   end
 
   def valid_bet?(bet)
-      bet.to_i > session[:money]
+      bet <= session[:money] && bet > 0
   end
 
   def bankrupt?
@@ -52,7 +52,7 @@ post '/getplayername' do
   if params[:name].empty?
     @error = "Name is required"
     halt erb(:username)
-  elsif  params[:bet].to_i < 1
+  elsif  !valid_bet?(params[:bet].to_i)
     @error = "Invalid Bet"
     halt erb(:username)
   end
@@ -96,7 +96,7 @@ get '/game' do
 end
 
 post '/game' do
-  if valid_bet?(params[:bet])
+  if !valid_bet?(params[:bet].to_i)
     @error = "Invalid Bet. You have $#{session[:money] } left."
     @show_player_moves, @show_bet = false, true
     halt erb :game

@@ -3,7 +3,7 @@
 
   <div class="span12">
 
-    <% if @result.nil?  %>
+    <% if @result.nil? && !@show_bet %>
     <div class="box-money">
       <p><%= session[:player]%>'s Cash: <span>$<%= session[:money] %></span></p>
     </div><!--/money-->
@@ -58,10 +58,12 @@
      <div class="box-bet">
      <form method="post" action="/game">
      <div class="row">
+        <% if !@show_bet %>
         <div class="span3 offset3">
            <h2>You have <br />$<%= session[:money]%> </h2>
         </div><!--/span 3-->
-        <div class="span3">
+        <% end %>
+        <div class="<% if @show_bet %> span5 offset4 <%else%> span3  <% end %>">
           <%if @error %>
             <div class="alert alert-error"><i class="icon  icon-exclamation-sign"></i> <%=@error%></div>
           <% end %>
