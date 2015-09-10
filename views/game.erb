@@ -10,7 +10,7 @@
     <% end %>
 
     <div class="box-dealer clearfix">
-       <% if @result.nil?  %>
+       <% if @result.nil? || @result == "bust" %>
           <ul class="list-cards">
               <li><span class="card card-<%= session[:dealer_cards][0][0].downcase+session[:dealer_cards][0][1] %>"></span></li>
               <li><span class="card"></span></li>
