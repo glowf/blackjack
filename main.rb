@@ -20,6 +20,10 @@ helpers do
     session[:money]  = money - session[:bet]
   end
 
+  def deal(hand)
+    hand << session[:deck].pop
+  end
+
   def valid_bet?(bet)
     bet <= session[:money] && bet > 0
   end
@@ -83,8 +87,8 @@ get '/game' do
   def initial_cards
     session[:dealer_cards], session[:player_cards] = [], []
     2.times do
-      session[:dealer_cards] << session[:deck].pop
-      session[:player_cards] << session[:deck].pop
+      deal(session[:dealer_cards])
+      deal(session[:player_cards])
     end
   end
   session[:deck] = session[:deck].size > 20 ? session[:deck] : build_deck.shuffle!
@@ -105,7 +109,7 @@ end
 post '/game/playermove' do
   case params[:move].downcase
   when 'hit'
-    session[:player_cards] << session[:deck].pop
+    deal(session[:player_cards])
     redirect '/game/results' if add_cards(session[:player_cards]) > BLACKJACK
   when 'stay'
     redirect '/game/dealersmove'
@@ -116,7 +120,7 @@ end
 get '/game/dealersmove' do
   @show_player_moves = false
   while add_cards(session[:dealer_cards]) < DEALER_HIT_REQUIREMENT do
-    session[:dealer_cards] << session[:deck].pop
+    deal(session[:dealer_cards])
   end
   redirect '/game/results'
   erb :game
