@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'sinatra'
-require 'pry'
 
 use Rack::Session::Cookie, :key => 'rack.session', :path => '/', :secret => 'glowf'
 set :sessions, true
@@ -54,7 +53,6 @@ post '/getplayername' do
   elsif  !valid_bet?(params[:bet].to_i)
     @error = "Invalid Bet"
     halt erb(:username)
-    binding.pry
   end
   session[:player] = params[:name].capitalize
   take_bet(params[:bet])
