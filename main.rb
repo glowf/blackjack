@@ -2,7 +2,6 @@ require 'rubygems'
 require 'sinatra'
 
 use Rack::Session::Cookie, :key => 'rack.session', :path => '/', :secret => 'glowf'
-set :sessions, true
 
 BLACKJACK = 21
 DEALER_HIT_REQUIREMENT = 17
@@ -30,6 +29,27 @@ helpers do
 
   def bankrupt?
     session[:money] == 0
+  end
+
+  def build_deck
+    suits = ['d','h','s','c']
+    card_values = (('2'..'10').to_a + ['J','Q','K','A']).product(suits)
+    card_values.each do |card|
+      fv = card[0]
+      if fv == 'A' then card << 1
+      elsif fv.to_i == 0 then card << 10 # if J, Q, K
+      else card << fv.to_i
+      end
+    end
+    card_values # [facevalue, suit, actual value]
+  end
+
+  def initial_cards
+    session[:dealer_cards], session[:player_cards] = [], []
+    2.times do
+      deal(session[:dealer_cards])
+      deal(session[:player_cards])
+    end
   end
 end
 
@@ -69,28 +89,8 @@ get '/game/new' do
 end
 
 get '/game' do
-  session[:deck], @result, session[:round] = [], nil, ""
-
-  def build_deck
-    suits = ['d','h','s','c']
-    card_values = (('2'..'10').to_a + ['J','Q','K','A']).product(suits)
-    card_values.each do |card|
-      fv = card[0]
-      if fv == 'A' then card << 1
-      elsif fv.to_i == 0 then card << 10 # if J, Q, K
-      else card << fv.to_i
-      end
-    end
-    card_values # [facevalue, suit, actual value]
-  end
-
-  def initial_cards
-    session[:dealer_cards], session[:player_cards] = [], []
-    2.times do
-      deal(session[:dealer_cards])
-      deal(session[:player_cards])
-    end
-  end
+  @result, session[:round] = nil, ""
+  session[:deck] = [] if session[:deck].nil?
   session[:deck] = session[:deck].size > 20 ? session[:deck] : build_deck.shuffle!
   initial_cards
   erb :game
@@ -123,7 +123,6 @@ get '/game/dealersmove' do
     deal(session[:dealer_cards])
   end
   redirect '/game/results'
-  erb :game
 end
 
 get '/game/results' do
