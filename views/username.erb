@@ -1,10 +1,8 @@
-<div class="row">
-  <div class="span6 offset3">
+<div class="container">
      <div class="box-username">
         <%if @error %>
           <div class="alert alert-error"><i class="icon  icon-exclamation-sign"></i> <%=@error%></div>
          <% end %>
-         <div class="alert alert-info">Welcome Guest. You have $<%=MONEY %>.</div>
          <form method="post" action="/getplayername" class="form-horizontal">
             <div class="control-group">
               <label class="control-label">Your Name</label>
@@ -16,20 +14,10 @@
                </div><!--/controls-->
             </div><!--/ control group-->
             <div class="control-group">
-              <label class="control-label">Your Bet</label>
-              <div class="controls">
-                <div class="input-append">
-                  <input class="span2"  type="text" value="100" name="bet">
-                  <span class="add-on">.00</span>
-                </div>
-              </div>
-            </div>
-            <div class="control-group">
               <div class="controls">
                 <button type="submit" class="btn btn-primary btn-large">Let's Go!</button>
               </div>
             </div>
           </form>
      </div><!--/box username-->
-  </div><!--/span 6 -->
-</div><!--/row-->
+</div><!--/container-->

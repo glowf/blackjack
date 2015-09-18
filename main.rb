@@ -1,42 +1,102 @@
 require 'rubygems'
 require 'sinatra'
+require 'json'
 
 use Rack::Session::Cookie, :key => 'rack.session', :path => '/', :secret => 'glowf'
 
 BLACKJACK = 21
 DEALER_HIT_REQUIREMENT = 17
-MONEY = 500
+BALANCE = 500
 
 helpers do
-  def add_cards(cards)
+  def deck
+    session[:deck]
+  end
+
+  def deck=(cards)
+    session[:deck] = cards
+  end
+
+  def hand_player
+    session[:player_cards]
+  end
+
+  def hand_player=(cards)
+    session[:player_cards] = cards
+  end
+
+  def hand_dealer
+    session[:dealer_cards]
+  end
+
+  def hand_dealer=(cards)
+    session[:dealer_cards] = cards
+  end
+
+  def balance
+    session[:balance]
+  end
+
+  def balance=(bal)
+    session[:balance] = bal
+  end
+
+  def player_name
+    session[:player]
+  end
+
+  def player_name=(name)
+    session[:player] = name
+  end
+
+  def bet
+    session[:bet]
+  end
+
+  def bet=(val)
+    session[:bet] = val
+  end
+
+  def hand_total(cards)
     total = cards.collect {|card| card[2]}.inject(:+)
-    total += 10 if cards.collect {|card| card[0]}.include?('A') && total-1 <= 10
+    total += 10 if cards.collect {|card| card[0]}.include?('a') && (total-1) <= 10
     total
   end
 
-  def take_bet(bet)
-    session[:bet]    = bet.to_i
-    session[:money]  -= session[:bet]
+  def deduct_bet
+    self.balance -= bet
+  end
+
+  def return_bet
+    self.balance += bet
+  end
+
+  def surrender
+    self.balance += bet/2
   end
 
   def deal(hand)
-    hand << session[:deck].pop
+    hand << deck.pop
   end
 
   def valid_bet?(bet)
-    bet <= session[:money] && bet > 0
+    bet <= balance && bet > 0
   end
 
   def bankrupt?
-    session[:money] == 0
+    balance == 0
+  end
+
+  def blackjack?(hand)
+    hand_total(hand) == 21 && hand.size == 2
   end
 
   def build_deck
     suits = ['d','h','s','c']
-    card_values = (('2'..'10').to_a + ['J','Q','K','A']).product(suits)
+    card_values = (('2'..'10').to_a + ['j','q','k','a']).product(suits)
     card_values.each do |card|
       fv = card[0]
-      if fv == 'A' then card << 1
+      if fv == 'a' then card << 1
       elsif fv.to_i == 0 then card << 10 # if J, Q, K
       else card << fv.to_i
       end
@@ -45,20 +105,16 @@ helpers do
   end
 
   def initial_cards
-    session[:dealer_cards], session[:player_cards] = [], []
+    self.hand_dealer,self.hand_player = [], []
     2.times do
-      deal(session[:dealer_cards])
-      deal(session[:player_cards])
+      deal(hand_dealer)
+      deal(hand_player)
     end
   end
 end
 
-before do
-  @show_player_moves = true
-end
-
 get '/' do
-  if !session[:player] || bankrupt?
+  if !player_name || bankrupt?
     redirect '/username'
   else
     redirect '/game'
@@ -70,66 +126,120 @@ get '/username' do
 end
 
 post '/getplayername' do
-  session[:money]  = MONEY
+  self.balance  = BALANCE
   if params[:name].empty?
     @error = "Name is required"
     halt erb(:username)
-  elsif  !valid_bet?(params[:bet].to_i)
-    @error = "Invalid Bet"
-    halt erb(:username)
   end
-  session[:player] = params[:name].capitalize
-  take_bet(params[:bet])
+  self.player_name = params[:name].capitalize
   redirect '/game'
 end
 
 get '/game/new' do
-  session[:player] = nil
+  self.player_name = nil
   redirect 'username'
 end
 
 get '/game' do
-  @result, session[:round] = nil, ""
-  session[:deck] = [] if session[:deck].nil?
-  session[:deck] = session[:deck].size > 20 ? session[:deck] : build_deck.shuffle!
-  initial_cards
-  erb :game
+  self.bet = 0 if bet.nil?
+  if bet > 0
+    @result   = nil
+    self.deck = [] if deck.nil?
+    self.deck = deck.size > 20 ? deck  : build_deck.shuffle!
+    initial_cards
+    redirect '/game/results' if (blackjack?(hand_player) || blackjack?(hand_dealer)) && !request.xhr? #if anyone gets a blackjack (21 with 2 cards), get results asap
+  end
+  erb :game, layout: !request.xhr?
 end
 
 post '/game' do
-  if !valid_bet?(params[:bet].to_i)
-    @error = "Invalid Bet. You have $#{session[:money] } left."
-    @show_player_moves, @show_bet = false, true
+  bet_input = params[:bet].to_i
+  if !valid_bet?(bet_input)
+    @error = "Invalid Bet. You have $#{balance} left."
     halt erb :game
   end
-  take_bet(params[:bet])
+  self.bet = bet_input
+  deduct_bet
   redirect '/game'
 end
 
 post '/game/playermove' do
   case params[:move].downcase
   when 'hit'
-    deal(session[:player_cards])
-    redirect '/game/results' if add_cards(session[:player_cards]) > BLACKJACK
+    redirect '/game/player/hit'
   when 'stay'
-    redirect '/game/dealersmove'
+    redirect '/game/player/stay'
+  when 'surrender'
+    redirect '/game/player/surrender'
+  when 'double down'
+    redirect '/game/player/doubledown'
   end
-  erb :game
+end
+
+get '/game/player/hit' do
+  if hand_total(hand_player) < BLACKJACK
+    deal(hand_player)
+    redirect '/game/results' if hand_total(hand_player) >= BLACKJACK && !request.xhr?
+  end
+  if request.xhr?
+     my_hash = {:cards => hand_player.last ,
+                :round => "player",
+                :total => hand_total(hand_player)}
+     JSON.generate(my_hash, quirks_mode: true)
+  else
+    erb :game
+  end
+end
+
+get '/game/player/stay' do
+  redirect '/game/dealersmove'
+end
+
+get '/game/player/surrender' do
+  surrender
+  @result = "surrender"
+  erb :game, layout: !request.xhr?
+end
+
+get '/game/player/doubledown' do
+  if valid_bet?(bet)
+    deduct_bet
+    self.bet += bet
+    if !request.xhr?
+      deal(hand_player)
+      redirect '/game/dealersmove'
+    end
+  end
 end
 
 get '/game/dealersmove' do
-  @show_player_moves = false
-  while add_cards(session[:dealer_cards]) < DEALER_HIT_REQUIREMENT do
-    deal(session[:dealer_cards])
+  if request.xhr?
+     if hand_total(hand_dealer) < DEALER_HIT_REQUIREMENT
+       deal(hand_dealer)
+       cards = hand_dealer.last
+     else
+       cards = []
+     end
+     my_hash = {:cards =>  cards,
+                :round => "dealer",
+                :total => hand_total(hand_dealer)}
+     JSON.generate(my_hash, quirks_mode: true)
+  else
+     while hand_total(hand_dealer) < DEALER_HIT_REQUIREMENT do
+      deal(hand_dealer)
+     end
+     redirect '/game/results'
   end
-  redirect '/game/results'
 end
 
 get '/game/results' do
-  @show_player_moves = false
-  player_total = add_cards(session[:player_cards])
-  dealer_total = add_cards(session[:dealer_cards])
-  @result = if player_total > BLACKJACK
+  player_total = hand_total(hand_player)
+  dealer_total = hand_total(hand_dealer)
+  @result = if blackjack?(hand_player) &&  !blackjack?(hand_dealer)
+              "blackjack"
+            elsif !blackjack?(hand_player) &&  blackjack?(hand_dealer)
+              "dealer"
+            elsif player_total > BLACKJACK
               "bust"
             elsif dealer_total > BLACKJACK
               "player"
@@ -140,19 +250,22 @@ get '/game/results' do
             else
               "dealer"
             end
-  if session[:round] == ""  #make sure no money is added if user hits refresh
-    if @result == "player"
-      session[:money] += session[:bet]*2 #return bet + winnings
-    elsif @result == "push"
-      session[:money] += session[:bet] #return bet
+  if bet > 0  #make sure no money is added if user hits refresh
+    case @result
+      when "player"
+        self.balance += bet * 2
+      when "blackjack"
+        self.balance += bet * 3
+      when "push"
+        return_bet
     end
-    session[:round] = "done"
+    self.bet = 0
   end
 
-  if bankrupt?
-    @error = "You have no money left."
-    @bankrupt = true
-    halt erb :game
+  if request.xhr?
+     my_hash = {:result => @result, :balance => balance }
+     JSON.generate(my_hash, quirks_mode: true)
+  else
+    erb :game
   end
-  erb :game
 end

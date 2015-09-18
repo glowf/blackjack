@@ -1,6 +1,6 @@
 body{
   background: url('images/table2.jpg') no-repeat center 0px;
-  height: 100%;
+  font-family: 'Roboto Slab', Helvetica, sans-serif;
 }
 
 html{
@@ -19,11 +19,15 @@ body,html{height: 100%;}
   margin:20px 0 0 100px;
 }
 
-.btn, label, input{text-shadow: none !important;}
+.btn, label, input{
+  text-shadow: none !important;
+  font-family: 'Roboto Slab', Helvetica, sans-serif;
+}
 
 .box-username{
-  margin: 250px 0 0 0;
+  margin: 250px auto 0 auto;
   border-radius: 20px;
+  width:500px;
   background:rgba(0,0,0,0.5);
   padding:10px 10px 10px 10px;
   border:5px solid #ccc;
@@ -38,10 +42,19 @@ body,html{height: 100%;}
   margin:20px 0 0 0;
 }
 
+.instructions{
+  text-align: center;
+  margin-top:180px;
+}
+
+.show{
+  display: block !important;
+}
+
 .box-game{
    position: relative;
    color:#FFF;
-   margin-top:200px;
+   margin-top:170px;
 }
 
 .box-money{
@@ -89,35 +102,45 @@ body,html{height: 100%;}
 }
 
 .box-player{
-   margin: 0 0 40px 0;
+   margin: 20px 0 40px 0;
+   width:100%;
+   position: relative;
 }
 
 .box-actions{
-  margin:20px 0 0 -20px;
+  clear:both;
+  position: absolute;
+  right:0;
+  top:200px;
+  width:280px;
 }
 
 .btn-move{
   display:block;
-  width:180px !important;
-  height: 80px;
+  width:135px !important;
+  height: 61px;
   text-indent: -999px;
   overflow: hidden;
-  float:left;
   cursor: pointer;
   outline: 0;
-  margin: 0 15px;
+  margin: 0 0 10px 0;
   border:none;
-  background:url('images/assets.png') no-repeat top left;
+  float:left;
+  background:url('images/assets.png') no-repeat 0 -1400px;
 }
-.btn-move:hover{background-position: 0px -80px;}
-.btn-move-stay {background-position: -200px 0px;}
-.btn-move-stay:hover{background-position: -200px -80px;}
+.btn-move-hit:hover{background-position: 0px -1461px;}
+.btn-move-stay {background-position: -200px -1400px;}
+.btn-move-stay:hover{background-position: -200px -1461px;}
+.btn-move-surrender {background-position: 0px -1600px;}
+.btn-move-surrender:hover {background-position: 0px -1661px;}
+.btn-move-dd {background-position: -200px -1600px;}
+.btn-move-dd:hover {background-position: -200px -1661px;}
 
 .total{
   position: absolute;
-  left:0;
+  left:-20px;
   top:-10px;
-  background:rgba(0,0,0,0.8);
+  background:rgba(0,0,0,1);
   width:50px;
   height: 40px;
   font-size:30px;
@@ -126,6 +149,7 @@ body,html{height: 100%;}
   text-align: center;
   padding: 10px 0 0 0;
   line-height: 30px;
+  z-index: 1000;
 }
 
 .box-dealer .total{
@@ -145,6 +169,7 @@ body,html{height: 100%;}
   float: left;
   margin: 0 0 0 -10px;
   padding:0;
+  position: relative;
 }
 
 .box-player .list-cards{
@@ -154,18 +179,31 @@ body,html{height: 100%;}
 .box-player .list-cards li{
   border:3px solid #ab6d91;
   border-radius: 10px;
-  padding:15px;
+  padding:10px;
   margin: 0 0 0 20px;
+  float:left;
+}
+
+.box-player .list-cards li:first-child{
+  margin-left:0;
 }
 
 .card{
   background:url('images/cards.png') no-repeat top left;
+  float:left;
   width:104px;
   height: 151px;
   display: block;
   text-indent: -999px;
   overflow: hidden;
   box-shadow: 3px -5px 30px 3px rgba(0,0,0,0.6);
+}
+
+#blank-card{
+  position: absolute;
+  z-index: 1;
+  top:0;
+  left:0;
 }
 
 .card-ad {background-position: 0 -151px;}
@@ -226,6 +264,7 @@ body,html{height: 100%;}
 
 .box-bet{
   margin: 20px 0 0 0;
+  clear:both;
 }
 .box-bet .add-on,
 .box-bet  input[type="text"]{
@@ -268,10 +307,10 @@ body,html{height: 100%;}
 
 .box-result{
   position: absolute;
-  top:-70px;
+  top:10px;
   left:0;
-  width:100%;
   z-index: 100;
+  width:100%;
   text-align: center;
 }
 
@@ -281,30 +320,46 @@ body,html{height: 100%;}
   text-indent: -9999px;
   height:126px;
   margin:0 auto;
+  margin:0 auto;
   -webkit-animation: blink-visible 3s  forwards;
   -moz-animation:    blink-visible 3s  forwards;
   -o-animation:      blink-visible 3s  forwards;
   animation:         blink-visible 3s  forwards;
 }
 
+.text-blackjack{
+  width:372px;
+  background-position:  0px 0px;
+}
+
+.text-surrender{
+  width:432px;
+  background-position:  0px -200px;
+}
+
 .text-player{
   width:420px;
-  background-position:  0px -200px;
+  background-position:  0px -400px;
 }
 
 .text-push{
   width:230px;
-  background-position:  0px -400px;
+  background-position:  0px -600px;
 }
 
 .text-bust{
-  background-position:  0px -600px;
+  background-position:  0px -800px;
   width:225px;
 }
 
 .text-dealer{
   width:440px;
-  background-position:  0px -800px;
+  background-position:  0px -1000px;
+}
+
+.text-surrender{
+  width:440px;
+  background-position:  0px -10000px;
 }
 
 @-webkit-keyframes less-opacity {
@@ -350,3 +405,123 @@ body,html{height: 100%;}
   96%, 100% { opacity: 1; }
 }
 
+.box-balance{
+  position: absolute;
+  bottom:0;
+  width:100%;
+  height:100px;
+  padding:15px 0;
+  color:#FFF;
+  font-size:30px;
+  background:rgba(0,0,0,0.8);
+}
+
+.box-balance .container{
+  position: relative;
+}
+
+.box-balance .balance,
+.box-balance .bet{
+  width: 300px;
+  border-radius: 30px;
+  padding:10px 20px;
+  background:#000;
+  text-align: right;
+  margin: 0 0 10px 0;
+  height:20px;
+  display: block;
+  position: relative;
+  border:3px solid rgba(255,255,255,0.5);
+}
+
+.box-balance .money{
+  float:right;
+}
+
+.box-balance  span{
+  display: block;
+  position: absolute;
+  left:20px;
+  font-size:14px;
+  top:10px;
+  color:#9da842;
+  text-transform: uppercase;
+}
+
+.box-balance  .bet span{
+  color:#a10a24;
+}
+
+.box-balance  .box-actions{
+  position:absolute;
+  left:0;
+  top:0;width:70%;
+}
+
+.box-balance  .box-actions input{
+  float:left;
+  margin-right:5px;
+}
+
+.box-balance p{
+  margin:0;
+}
+
+.box-chips{
+  position: absolute;
+  left:0;
+  top:-40px;
+}
+
+.list-bets li{
+  float:right;
+  margin-right:10px;
+  list-style: none;
+}
+
+.list-bets a{
+  display: block;
+  text-indent: -9999px;
+  overflow: hidden;
+  width:70px;
+  height: 74px;
+  float:left;
+  background-image:url('images/assets.png');
+}
+
+.list-bets a:hover{
+  margin-top:-5px;
+}
+
+.chip-10{background-position: 0 -1200px;}
+.chip-20{background-position: -100px -1200px;}
+.chip-50{background-position: -200px -1200px;}
+.chip-100{background-position: -300px -1200px;}
+
+.list-bets a.disable{
+  opacity: 0.5;
+}
+
+.list-bets a.disable:hover{
+  margin-top:0;
+}
+
+.box-chips .buttons{
+  margin-left:20px;
+}
+
+.box-chips .buttons button{
+  width:150px;
+}
+
+.box-gameover{
+  display:none;
+  width:400px;
+  float:left;
+  text-align: center;
+}
+
+.box-gameover p{
+  font-size:20px;
+  margin:10px 0;
+}
