@@ -35,7 +35,7 @@
   <% else %>
     <div class="instructions">
        <h1>Hi <%= player_name %>!</h1>
-       <h3>Place your bet so we can start.</h3>
+       <h3>Place your bet so we can start. Minimum bet is $10.</h3>
     </div><!--/instructions-->
   <% end %>
  </div></div><!--/box game and container-->
@@ -56,6 +56,7 @@
          data-desc="You want another card." />
          <input type="submit" id="btn-move-stay" name="move" value="Stay" class="btn-move btn-move-stay"
          data-desc="You're satisfied with your hand." />
+
          <div id="box-actions-additional">
            <input type="submit" id="btn-move-surrender" class="btn-move btn-move-surrender"
            name="move" value="Surrender" data-desc="Give up your hand and get half of your bet back." />
@@ -64,6 +65,7 @@
              data-desc="Double your bet and get one additional card." />
            <% end %>
          </div><!--/box actions additional-->
+
          <div class="desc"></div>
        </form>
       </div><!--/box actions-->
@@ -89,7 +91,7 @@
 
       <div id="box-gameover" class="box-gameover <% if  balance < MINIMUM_BET && bet == 0 %> show <% end %>">
         <p>Sorry <%= player_name%>,<br /> you don't have enough money left.</p>
-        <a href="/game/new" class="btn btn-large  btn-primary">RETRY</a>
+        <a href="/game/new" class="btn btn-large btn-primary">RETRY</a>
       </div><!--/box gameover-->
   </div></div><!--/box balance-->
 </div><!--#game-->

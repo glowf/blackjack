@@ -28,14 +28,9 @@ $(document).ready(function(){
 
   // Add listeners to buttons
   $('body').on({
-      mouseenter: function () {
-          $('.desc').text($(this).attr('data-desc'));
-      },
-      mouseleave: function () {
-          $('.desc').text('');
-      }
+      mouseenter: function () {$('.desc').text($(this).attr('data-desc'));},
+      mouseleave: function () {$('.desc').text(''); }
   }, ".btn-move");
-
 
   $('body').on("click", btn_hit, function() {
     $("#box-actions-additional").hide();
