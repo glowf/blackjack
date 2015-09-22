@@ -34,6 +34,7 @@ $(document).ready(function(){
 
   $('body').on("click", btn_hit, function() {
     $("#box-actions-additional").hide();
+    $(this).prop('disabled', true);
     player_hit();
     return false;
   });
@@ -88,6 +89,7 @@ $(document).ready(function(){
             hide_actions();
             process_result();
           }
+          $(btn_hit).prop('disabled', false);
       });
   }
 
