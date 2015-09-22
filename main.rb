@@ -122,7 +122,6 @@ get '/' do
 end
 
 get '/username' do
-  @start = false
   erb  :username
 end
 
@@ -165,7 +164,7 @@ post '/game' do
   redirect '/game'
 end
 
-get '/game/bet' do
+get '/game/bet' do #this route is only used when JS is disabled
   amount = params[:amount].to_i
   amounts = [10,20,50,100]
   if amounts.include?(amount) && valid_bet?(bet + amount)
@@ -175,7 +174,6 @@ get '/game/bet' do
   else
     erb :game
   end
-
 end
 
 post '/game/playermove' do

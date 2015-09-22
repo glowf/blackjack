@@ -23,7 +23,7 @@ $(document).ready(function(){
 
   chips_toggle(); //in case of refresh
 
-  $('html').addClass('js');
+  $('html').addClass('js'); //if js is successfully loaded, add js class to html
 
   // Add listeners to buttons
   $('body').on("click", btn_hit, function() {
@@ -109,15 +109,15 @@ $(document).ready(function(){
   }
 
   function dealer_hit() {
-    $("#blank-card").remove();
     hide_actions();
+    $("#blank-card").remove();
+    $(".box-dealer > .total").text(data.total).show();
     $.ajax({
         type: 'get',
         url:   '/game/player/stay',
         dataType: 'json'
       }).done(function(data){
        window.setTimeout(function() {
-         $(".box-dealer > .total").text(data.total).show();
          if (($(data.cards).length != 0) && show_card(data, div_dealer));
          (data.total >= DEALER_HIT) ? process_result() : dealer_hit();
        }, 1000);
