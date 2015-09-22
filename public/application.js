@@ -27,6 +27,16 @@ $(document).ready(function(){
   $('html').addClass('js'); //if js is successfully loaded, add js class to html
 
   // Add listeners to buttons
+  $('body').on({
+      mouseenter: function () {
+          $('.desc').text($(this).attr('data-desc'));
+      },
+      mouseleave: function () {
+          $('.desc').text('');
+      }
+  }, ".btn-move");
+
+
   $('body').on("click", btn_hit, function() {
     $("#box-actions-additional").hide();
     player_hit();

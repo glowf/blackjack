@@ -89,7 +89,7 @@ helpers do
   end
 
   def blackjack?(hand)
-    hand_total(hand) == 21 && hand.size == 2
+    hand_total(hand) == BLACKJACK && hand.size == 2
   end
 
   def build_deck

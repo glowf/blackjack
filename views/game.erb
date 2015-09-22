@@ -52,14 +52,19 @@
 
       <div class="box-actions <% if  bet == 0 %> hide <% end %>" >
        <form method="post" id="form-move" action="/game/playermove">
-         <input type="submit" id="btn-move-hit" name="move" value="Hit" class="btn-move btn-move-hit" />
-         <input type="submit" id="btn-move-stay" name="move" value="Stay" class="btn-move btn-move-stay" />
+         <input type="submit" id="btn-move-hit" name="move" value="Hit" class="btn-move btn-move-hit"
+         data-desc="You want another card." />
+         <input type="submit" id="btn-move-stay" name="move" value="Stay" class="btn-move btn-move-stay"
+         data-desc="You're satisfied with your hand." />
          <div id="box-actions-additional">
-           <input type="submit" id="btn-move-surrender" class="btn-move btn-move-surrender" name="move" value="Surrender" />
+           <input type="submit" id="btn-move-surrender" class="btn-move btn-move-surrender"
+           name="move" value="Surrender" data-desc="Give up your hand and get half of your bet back." />
            <% if valid_bet?(bet) %>
-             <input type="submit" id="btn-move-dd" class="btn-move btn-move-dd" name="move" value="Double Down" />
+             <input type="submit" id="btn-move-dd" class="btn-move btn-move-dd" name="move" value="Double Down"
+             data-desc="Double your bet and get one additional card." />
            <% end %>
          </div><!--/box actions additional-->
+         <div class="desc"></div>
        </form>
       </div><!--/box actions-->
 
