@@ -400,7 +400,20 @@ body,html{height: 100%;}
 .box-chips{
   position: absolute;
   left:0;
+  top:30px;
+}
+
+.js .box-chips{
   top:-40px;
+}
+
+.box-chips .tutorial{
+  position: absolute;
+  top:-50px;
+  left:0;
+  width:110%;
+  opacity: 0.8;
+  font-size:17px;
 }
 
 .list-bets li{
@@ -448,6 +461,7 @@ body,html{height: 100%;}
   display:none;
   width:400px;
   float:left;
+  margin-top:-15px;
   text-align: center;
 }
 

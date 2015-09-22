@@ -35,8 +35,7 @@
   <% else %>
     <div class="instructions">
        <h1>Hi <%= player_name %>!</h1>
-       <h3>We'll need your bet before we can deal the cards.</h3>
-       <h4>Click on the chips below to place your bet.</h4>
+       <h3>Place your bet so we can start.</h3>
     </div><!--/instructions-->
   <% end %>
  </div></div><!--/box game and container-->
@@ -64,7 +63,9 @@
        </form>
       </div><!--/box actions-->
 
-      <div id="box-bet" class="box-chips <% if  bet > 0 || balance == 0 %> hide <% end %>">
+      <div id="box-bet" class="box-chips <% if  bet > 0 || balance < MINIMUM_BET %> hide <% end %>">
+        <h4 class="tutorial">Click on the chips below to place your bet.</h4>
+        <h5 class="tutorial hide">Then press the DEAL button once you're ready.</h5>
         <ul class="list-bets clearfix">
           <li><a href="/game/bet?amount=10" class="chip-10">10</a></li>
           <li><a href="/game/bet?amount=20" class="chip-20">20</a></li>
@@ -81,8 +82,8 @@
         </form>
       </div><!--/box bet-->
 
-      <div id="box-gameover" class="box-gameover <% if  balance == 0 && bet == 0 %> show <% end %>">
-        <p>Sorry <%= player_name%>, you have no money left.</p>
+      <div id="box-gameover" class="box-gameover <% if  balance < MINIMUM_BET && bet == 0 %> show <% end %>">
+        <p>Sorry <%= player_name%>,<br /> you don't have enough money left.</p>
         <a href="/game/new" class="btn btn-large  btn-primary">RETRY</a>
       </div><!--/box gameover-->
   </div></div><!--/box balance-->

@@ -4,9 +4,10 @@ require 'json'
 
 use Rack::Session::Cookie, :key => 'rack.session', :path => '/', :secret => 'glowf'
 
-BLACKJACK = 21
+BLACKJACK              = 21
+BALANCE                = 500
+MINIMUM_BET            = 10
 DEALER_HIT_REQUIREMENT = 17
-BALANCE = 500
 
 helpers do
   def deck
@@ -80,7 +81,7 @@ helpers do
   end
 
   def valid_bet?(bet)
-    bet <= balance && bet > 0
+    bet <= balance && bet >= MINIMUM_BET
   end
 
   def bankrupt?
@@ -143,7 +144,7 @@ end
 
 get '/game' do
   self.bet = 0 if bet.nil?
-  if bet > 0
+  if bet >= MINIMUM_BET
     @result   = nil
     self.deck = [] if deck.nil?
     self.deck = deck.size > 20 ? deck  : build_deck.shuffle!
@@ -195,10 +196,7 @@ get '/game/player/hit' do
     redirect '/game/results' if hand_total(hand_player) >= BLACKJACK && !request.xhr?
   end
   if request.xhr?
-     my_hash = {:cards => hand_player.last ,
-                :round => "player",
-                :total => hand_total(hand_player)}
-     JSON.generate(my_hash, quirks_mode: true)
+     {:cards => hand_player.last, :round => "player", :total => hand_total(hand_player)}.to_json
   else
     erb :game
   end
@@ -211,6 +209,7 @@ end
 get '/game/player/surrender' do
   surrender
   @result = "surrender"
+  self.bet = 0
   erb :game, layout: !request.xhr?
 end
 
@@ -233,10 +232,7 @@ get '/game/dealersmove' do
      else
        cards = []
      end
-     my_hash = {:cards =>  cards,
-                :round => "dealer",
-                :total => hand_total(hand_dealer)}
-     JSON.generate(my_hash, quirks_mode: true)
+     {:cards =>  cards, :round => "dealer", :total => hand_total(hand_dealer)}.to_json
   else
      while hand_total(hand_dealer) < DEALER_HIT_REQUIREMENT do
       deal(hand_dealer)
@@ -274,10 +270,8 @@ get '/game/results' do
     end
     self.bet = 0
   end
-
   if request.xhr?
-     my_hash = {:result => @result, :balance => balance }
-     JSON.generate(my_hash, quirks_mode: true)
+     {:result => @result, :balance => balance}.to_json
   else
     erb :game
   end

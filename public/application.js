@@ -1,7 +1,8 @@
 $(document).ready(function(){
 
   var BLACKJACK  = 21,
-      DEALER_HIT = 17;
+      DEALER_HIT = 17,
+      MIN_BET    = 10;
 
   var btn_hit       = "#btn-move-hit",
       btn_stay      = "#btn-move-stay",
@@ -49,6 +50,8 @@ $(document).ready(function(){
   });
 
   $('body').on("click", bet_chip, function() {
+    $('h4.tutorial').fadeOut(500);
+    $('h5.tutorial').fadeIn(500);
     add_bet(parseInt($(this).text()));
     if (current_bet() > 0) { disable_bet_actions(false); }
     return false;
@@ -102,25 +105,23 @@ $(document).ready(function(){
       }).done(function(data){
         $(div_game).replaceWith(data);
         show_result("surrender");
-        update_balances(current_balance(), 0);
-        $(div_bet).fadeIn(500);
-         hide_actions();
+        update_page(current_balance());
     });
   }
 
   function dealer_hit() {
     hide_actions();
     $("#blank-card").remove();
-    $(".box-dealer > .total").text(data.total).show();
     $.ajax({
         type: 'get',
         url:   '/game/player/stay',
         dataType: 'json'
       }).done(function(data){
        window.setTimeout(function() {
+         $(".box-dealer > .total").text(data.total).show();
          if (($(data.cards).length != 0) && show_card(data, div_dealer));
          (data.total >= DEALER_HIT) ? process_result() : dealer_hit();
-       }, 1000);
+       }, 600);
     });
   }
 
@@ -144,11 +145,17 @@ $(document).ready(function(){
         dataType: 'json'
       }).done(function(data){
           show_result(data.result);
-          $(div_bet).fadeIn(500);
-          update_balances(data.balance, 0);
-          if ((data.balance == 0) && bankrupt());
+          update_page(data.balance);
      });
   }
+
+  function update_page(balance){
+    $('.tutorial').remove();
+    $(div_bet).fadeIn(500);
+    update_balances(balance, 0);
+    if ((current_balance() < MIN_BET) && bankrupt());
+  }
+
 
   function show_card(data, div_id){
     var card = data.cards[0] + data.cards[1];
@@ -216,7 +223,7 @@ $(document).ready(function(){
   //once the first two cards are dealt, immediately check for a blackjack
   function check_player_blackjack(){
     var total = parseInt($(div_player).find('.total').text());
-    if (total == 21){
+    if (total == BLACKJACK){
       hide_actions();
       process_result();
     }
@@ -226,5 +233,4 @@ $(document).ready(function(){
     $(div_bet).hide();
     $("#box-gameover").show();
   }
-
 });
