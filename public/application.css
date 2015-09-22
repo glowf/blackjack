@@ -3,10 +3,7 @@ body{
   font-family: 'Roboto Slab', Helvetica, sans-serif;
 }
 
-html{
-  background: url('images/bg.jpg') repeat;
-}
-
+html{background: url('images/bg.jpg') repeat;}
 body,html{height: 100%;}
 
 .navbar,.navbar-inner{
@@ -24,6 +21,16 @@ body,html{height: 100%;}
   font-family: 'Roboto Slab', Helvetica, sans-serif;
 }
 
+.show{
+  display: block !important;
+}
+
+.js .box-chips .buttons{
+  display:block;
+}
+
+
+/* USERNAME */
 .box-username{
   margin: 250px auto 0 auto;
   border-radius: 20px;
@@ -42,59 +49,25 @@ body,html{height: 100%;}
   margin:20px 0 0 0;
 }
 
+/* GAME START */
 .instructions{
   text-align: center;
-  margin-top:180px;
+  margin-top:80px;
 }
 
-.show{
-  display: block !important;
+.instructions h1{
+  margin-bottom:30px;
 }
 
 .box-game{
-   position: relative;
-   color:#FFF;
-   margin-top:170px;
-}
-
-.box-money{
-  color:#ab6d91;
-  font-size:30px;
-  position: absolute;
-  top:360px;
-  left:10px;
-}
-
-.box-money p{
-  color:#ccc;
-  font-size:35px;
-  padding:10px 0 0 0;
-  line-height: 40px;
-  margin:0;
-  font-weight:bold;
-}
-
-.box-money p span{
-  color:#418a1c;
-  display: block;
+  position: relative;
+  color:#FFF;
+  margin-top:170px;
 }
 
 .box-dealer,
 .box-player{
   position: relative;
-}
-
-.result-shown .list-cards,
-.result-shown .total{
-   -webkit-animation: less-opacity 1s 0s forwards;
-  -moz-animation:    less-opacity 1s 0s forwards;
-  -o-animation:      less-opacity 1s 0s forwards;
-  animation:         less-opacity 1s 0s forwards;
-}
-
-.hide-cards .box-dealer,
-.hide-cards .box-player{
-  display:none;
 }
 
 .box-dealer{
@@ -107,34 +80,13 @@ body,html{height: 100%;}
    position: relative;
 }
 
-.box-actions{
-  clear:both;
-  position: absolute;
-  right:0;
-  top:200px;
-  width:280px;
+.result-shown .list-cards,
+.result-shown .total{
+   -webkit-animation: less-opacity 1s 0s forwards;
+  -moz-animation:    less-opacity 1s 0s forwards;
+  -o-animation:      less-opacity 1s 0s forwards;
+  animation:         less-opacity 1s 0s forwards;
 }
-
-.btn-move{
-  display:block;
-  width:135px !important;
-  height: 61px;
-  text-indent: -999px;
-  overflow: hidden;
-  cursor: pointer;
-  outline: 0;
-  margin: 0 0 10px 0;
-  border:none;
-  float:left;
-  background:url('images/assets.png') no-repeat 0 -1400px;
-}
-.btn-move-hit:hover{background-position: 0px -1461px;}
-.btn-move-stay {background-position: -200px -1400px;}
-.btn-move-stay:hover{background-position: -200px -1461px;}
-.btn-move-surrender {background-position: 0px -1600px;}
-.btn-move-surrender:hover {background-position: 0px -1661px;}
-.btn-move-dd {background-position: -200px -1600px;}
-.btn-move-dd:hover {background-position: -200px -1661px;}
 
 .total{
   position: absolute;
@@ -262,49 +214,6 @@ body,html{height: 100%;}
 .card-3s {background-position: -1144px -604px;}
 .card-2s {background-position: -1248px -604px;}
 
-.box-bet{
-  margin: 20px 0 0 0;
-  clear:both;
-}
-.box-bet .add-on,
-.box-bet  input[type="text"]{
-  height:50px;
-}
-
-.box-bet .add-on{
-  background:#ab6d91;
-  color:#333;
-  padding:20px 15px 10px 15px;
-  font-size:30px;
-  color:#000;
-  text-shadow:none;
-  vertical-align: middle;
-  border:none;
-  height: 28px;
-}
-
-.box .input-prepend {
-  border:none;
-}
-
-.box-bet  input[type="text"]{
-  text-align: right;
-  border:none;
-  color:#000;
-  width:80%;
-  font-size:35px;
-  font-weight:bold;
-}
-
-.box-bet  h2{
-  text-align: center;
-}
-
-.box-bet .btn-success{
-  font-weight: bold;
-  font-size: 30px;
-}
-
 .box-result{
   position: absolute;
   top:10px;
@@ -333,7 +242,7 @@ body,html{height: 100%;}
 }
 
 .text-surrender{
-  width:432px;
+  width:420px;
   background-position:  0px -200px;
 }
 
@@ -357,10 +266,6 @@ body,html{height: 100%;}
   background-position:  0px -1000px;
 }
 
-.text-surrender{
-  width:440px;
-  background-position:  0px -10000px;
-}
 
 @-webkit-keyframes less-opacity {
   0%        { opacity: 1; }
@@ -404,6 +309,8 @@ body,html{height: 100%;}
   0%        { opacity: 0; }
   96%, 100% { opacity: 1; }
 }
+
+/* fOOTER AREA - balance, bet, actions, gameover */
 
 .box-balance{
   position: absolute;
@@ -455,13 +362,36 @@ body,html{height: 100%;}
 .box-balance  .box-actions{
   position:absolute;
   left:0;
-  top:0;width:70%;
+  top:0;
+  width:70%;
 }
 
 .box-balance  .box-actions input{
   float:left;
   margin-right:5px;
 }
+
+.btn-move{
+  display:block;
+  width:135px !important;
+  height: 61px;
+  text-indent: -999px;
+  overflow: hidden;
+  cursor: pointer;
+  outline: 0;
+  margin: 0 0 10px 0;
+  border:none;
+  float:left;
+  background:url('images/assets.png') no-repeat 0 -1400px;
+}
+
+.btn-move-hit:hover{background-position: 0px -1461px;}
+.btn-move-stay {background-position: -200px -1400px;}
+.btn-move-stay:hover{background-position: -200px -1461px;}
+.btn-move-surrender {background-position: 0px -1600px;}
+.btn-move-surrender:hover {background-position: 0px -1661px;}
+.btn-move-dd {background-position: -200px -1600px;}
+.btn-move-dd:hover {background-position: -200px -1661px;}
 
 .box-balance p{
   margin:0;
@@ -525,3 +455,4 @@ body,html{height: 100%;}
   font-size:20px;
   margin:10px 0;
 }
+

@@ -1,14 +1,14 @@
 $(document).ready(function(){
 
-  var BLACKJACK = 21,
+  var BLACKJACK  = 21,
       DEALER_HIT = 17;
 
-  var btn_hit      = "#btn-move-hit",
-      btn_stay     = "#btn-move-stay",
-      btn_dd       = "#btn-move-dd",
+  var btn_hit       = "#btn-move-hit",
+      btn_stay      = "#btn-move-stay",
+      btn_dd        = "#btn-move-dd",
       btn_surrender = "#btn-move-surrender",
-      bet_chip     = ".list-bets a",
-      btn_deal     = "#btn-deal",
+      bet_chip      = ".list-bets a",
+      btn_deal      = "#btn-deal",
       btn_clear_bet = "#btn-clear-bet";
 
   var div_player = "#box-player",
@@ -16,17 +16,19 @@ $(document).ready(function(){
       div_game   = "#game",
       div_bet    = "#box-bet";
 
-  var bet_amount = "#bet-amount",
-      balance_amount = "#balance-amount",
-      bet_display = ".bet p",
+  var bet_amount      = "#bet-amount",
+      balance_amount  = "#balance-amount",
+      bet_display     = ".bet p",
       balance_display = ".balance p";
 
   chips_toggle(); //in case of refresh
 
+  $('html').addClass('js');
+
   // Add listeners to buttons
   $('body').on("click", btn_hit, function() {
-    player_hit();
     $("#box-actions-additional").hide();
+    player_hit();
     return false;
   });
 
@@ -53,6 +55,9 @@ $(document).ready(function(){
   });
 
   $('body').on("click", btn_deal,  function() {
+    $(this)
+     .text('Dealing...')
+     .prop("disabled", true);
     deal_again();
     return false;
   });
@@ -70,17 +75,16 @@ $(document).ready(function(){
         dataType: 'json',
         }).done(function(data){
           show_card(data, div_player);
-          if ((data.total == BLACKJACK) && $(btn_stay).trigger( 'click' ));
+          if ((data.total == BLACKJACK || is_dd) && $(btn_stay).trigger( 'click' ));
           if (data.total > BLACKJACK) {
             hide_actions();
             process_result();
-          } else {
-            if ((is_dd) && $(btn_stay).trigger( 'click' ));
           }
       });
   }
 
   function player_dd() {
+    update_balances(current_balance()-current_bet(),current_bet()*2);
     $.ajax({
       type: 'get',
       url:   '/game/player/doubledown'
@@ -90,30 +94,33 @@ $(document).ready(function(){
   }
 
   function player_surrender() {
+     hide_actions();
     $.ajax({
       type: 'get',
       url:   '/game/player/surrender',
       dataType: 'html',
       }).done(function(data){
         $(div_game).replaceWith(data);
-        hide_actions();
         show_result("surrender");
         update_balances(current_balance(), 0);
         $(div_bet).fadeIn(500);
+         hide_actions();
     });
   }
 
   function dealer_hit() {
     $("#blank-card").remove();
+    hide_actions();
     $.ajax({
         type: 'get',
         url:   '/game/player/stay',
         dataType: 'json'
       }).done(function(data){
-        hide_actions();
-        $(".box-dealer > .total").text(data.total).show();
-        if (($(data.cards).length != 0) && show_card(data, div_dealer));
-        (data.total >= DEALER_HIT) ? process_result() : dealer_hit();
+       window.setTimeout(function() {
+         $(".box-dealer > .total").text(data.total).show();
+         if (($(data.cards).length != 0) && show_card(data, div_dealer));
+         (data.total >= DEALER_HIT) ? process_result() : dealer_hit();
+       }, 1000);
     });
   }
 
@@ -210,7 +217,6 @@ $(document).ready(function(){
   function check_player_blackjack(){
     var total = parseInt($(div_player).find('.total').text());
     if (total == 21){
-      console.log("blackjack: "+ total);
       hide_actions();
       process_result();
     }

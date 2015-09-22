@@ -1,108 +1,89 @@
 <div id="game">
-<div class="container clearfix">
-<div class="box-game clearfix  <% if !@result.nil? %> result-shown <%end%>  ">
+<div class="container"><div class="box-game clearfix  <% if !@result.nil? %> result-shown <%end%>  ">
+   <% if bet > 0 || !@result.nil? %>
+      <div id="box-dealer" class="box-dealer clearfix">
+         <% if  @result == "bust" || @result.nil? %>
+           <span class="total hide"></span>
+           <ul  class="list-cards dealer-cards clearfix">
+              <% hand_dealer.each_with_index do |card,index| %>
+                <li><%if index == 1 %><span class="card" id="blank-card"></span> <% end %>
+                <span class="card card-<%= card[0].downcase+card[1] %>"></span></li>
+              <% end%>
+            </ul>
+         <% else %>
+            <span class="total"><%= hand_total(hand_dealer) %></span>
+            <ul  class="list-cards dealer-cards clearfix">
+              <% hand_dealer.each_with_index do |card,index| %>
+                <li><span class="card card-<%= card[0].downcase+card[1] %>"></span></li>
+             <% end%>
+            </ul>
+         <% end %>
+      </div><!--/box dealer-->
 
- <% if bet > 0 %>
-    <div id="box-dealer" class="box-dealer clearfix">
-       <% if  @result == "bust" || @result.nil? %>
-          <span class="total hide"></span>
-          <ul  class="list-cards dealer-cards clearfix">
-          <% hand_dealer.each_with_index do |card,index| %>
-              <li><%if index == 1 %><span class="card" id="blank-card"></span> <% end %>
-              <span class="card card-<%= card[0].downcase+card[1] %>"></span></li>
-          <% end%>
-         </ul>
-       <% else %>
-         <span class="total"><%= hand_total(hand_dealer) %></span>
-         <ul  class="list-cards dealer-cards clearfix">
-          <% hand_dealer.each_with_index do |card,index| %>
-              <li><span class="card card-<%= card[0].downcase+card[1] %>"></span></li>
-          <% end%>
-         </ul>
-       <% end %>
-   </div><!--/box dealer-->
-
-
-    <div id="box-player" class="box-player clearfix">
-
+      <div id="box-player" class="box-player clearfix">
          <div class="box-result <% if @result.nil? %> hide <% end %>">
            <span class="text-result text-<%= @result %>"><%= @result %></span>
          </div><!--/box result-->
 
-       <span class="total"><%= hand_total(hand_player) %></span>
-       <ul class="list-cards clearfix" >
-       <% hand_player.each do |card| %>
-          <li><span class="card card-<%= card[0].downcase+card[1] %>"></span>
-       <% end%>
-      </ul>
-    </div><!--/box player-->
+         <span class="total"><%= hand_total(hand_player) %></span>
+         <ul class="list-cards clearfix" >
+           <% hand_player.each do |card| %>
+             <li><span class="card card-<%= card[0].downcase+card[1] %>"></span>
+           <% end%>
+         </ul>
+       </div><!--/box player-->
+  <% else %>
+    <div class="instructions">
+       <h1>Hi <%= player_name %>!</h1>
+       <h3>We'll need your bet before we can deal the cards.</h3>
+       <h4>Click on the chips below to place your bet.</h4>
+    </div><!--/instructions-->
+  <% end %>
+ </div></div><!--/box game and container-->
 
-<% else %>
-
-<div class="instructions">
-
-  <h1>Hi <%= player_name %>!</h1>
-  <h3>Click on the chips below to place your bet.</h3>
-</div><!--/instructions-->
-
-<% end %>
-
-
-</div><!--/box game-->
-</div><!--/container-->
-
-   <div class="box-balance">
-      <div class="container clearfix">
-
-        <div class="money">
-         <div class="bet">
-             <span>current bet</span>
-             <p>$<%=bet%></p>
-          </div><!--/balance-->
-          <div class="balance">
-             <span>Balance</span>
-             <p>$<%= balance %></p>
-          </div><!--/balance-->
-        </div><!--/money-->
-
+ <div class="box-balance"><div class="container clearfix">
+      <div class="money">
+        <div class="bet">
+          <span>current bet</span><p>$<%=bet%></p>
+        </div><!--/bet-->
+        <div class="balance">
+          <span>Balance</span><p>$<%= balance %></p>
+        </div><!--/balance-->
+      </div><!--/money-->
 
       <div class="box-actions <% if  bet == 0 %> hide <% end %>" >
-           <form method="post" id="form-move" action="/game/playermove">
-             <input type="submit" id="btn-move-hit" name="move" value="Hit" class="btn-move btn-move-hit" />
-             <input type="submit" id="btn-move-stay" name="move" value="Stay" class="btn-move btn-move-stay" />
-             <div id="box-actions-additional">
-               <input type="submit" id="btn-move-surrender" class="btn-move btn-move-surrender" name="move" value="Surrender" />
-               <% if valid_bet?(bet) %>
-                 <input type="submit" id="btn-move-dd" class="btn-move btn-move-dd" name="move" value="Double Down" />
-               <% end %>
-             </div><!--/box actions additional-->
-           </form>
-        </div><!--/box actions-->
+       <form method="post" id="form-move" action="/game/playermove">
+         <input type="submit" id="btn-move-hit" name="move" value="Hit" class="btn-move btn-move-hit" />
+         <input type="submit" id="btn-move-stay" name="move" value="Stay" class="btn-move btn-move-stay" />
+         <div id="box-actions-additional">
+           <input type="submit" id="btn-move-surrender" class="btn-move btn-move-surrender" name="move" value="Surrender" />
+           <% if valid_bet?(bet) %>
+             <input type="submit" id="btn-move-dd" class="btn-move btn-move-dd" name="move" value="Double Down" />
+           <% end %>
+         </div><!--/box actions additional-->
+       </form>
+      </div><!--/box actions-->
 
-    <div id="box-bet" class="box-chips <% if  bet > 0 || balance == 0 %> hide <% end %>">
-      <ul class="list-bets clearfix">
-        <li><a href="#" class="chip-10">10</a></li>
-        <li><a href="#" class="chip-20">20</a></li>
-        <li><a href="#" class="chip-50">50</a></li>
-        <li><a href="#" class="chip-100">100</a></li>
-      </ul>
-      <form method="post" action="/game">
-          <input type="hidden" name="bet" id="bet-amount" value="0" />
-          <input type="hidden" name="balance" id="balance-amount" value="<%= balance %>" />
-          <div class="buttons">
-            <button type="submit" id="btn-clear-bet" name="deal"class="btn-warning btn-large btn" disabled="disabled">Clear Bet</button>
-            <button type="submit" id="btn-deal" name="deal"class="btn-success btn-large btn" disabled="disabled">Deal</button>
-          </div><!--/buttons-->
-      </form>
-   </div><!--/box bet-->
+      <div id="box-bet" class="box-chips <% if  bet > 0 || balance == 0 %> hide <% end %>">
+        <ul class="list-bets clearfix">
+          <li><a href="/game/bet?amount=10" class="chip-10">10</a></li>
+          <li><a href="/game/bet?amount=20" class="chip-20">20</a></li>
+          <li><a href="/game/bet?amount=50" class="chip-50">50</a></li>
+          <li><a href="/game/bet?amount=100" class="chip-100">100</a></li>
+        </ul>
+        <form method="post" action="/game">
+            <input type="hidden" name="bet" id="bet-amount" value="<%= bet %>" />
+            <input type="hidden" name="balance" id="balance-amount" value="<%= balance %>" />
+            <div class="buttons hide">
+              <button type="submit" id="btn-clear-bet" name="deal"class="btn-warning btn-large btn" disabled="disabled">Clear Bet</button>
+              <button type="submit" id="btn-deal" name="deal"class="btn-success btn-large btn" disabled="disabled">Deal</button>
+            </div><!--/buttons-->
+        </form>
+      </div><!--/box bet-->
 
-
-    <div id="box-gameover" class="box-gameover <% if  balance == 0 && bet == 0 %> show <% end %>">
-          <p>Sorry <%= player_name%>, you have no money left.</p>
-          <a href="/game/new" class="btn btn-large  btn-primary">RETRY</a>
-     </div><!--/box gameover-->
-
-      </div><!--/container-->
-   </div><!--/box balance-->
-
-</div>
+      <div id="box-gameover" class="box-gameover <% if  balance == 0 && bet == 0 %> show <% end %>">
+        <p>Sorry <%= player_name%>, you have no money left.</p>
+        <a href="/game/new" class="btn btn-large  btn-primary">RETRY</a>
+      </div><!--/box gameover-->
+  </div></div><!--/box balance-->
+</div><!--#game-->

@@ -122,6 +122,7 @@ get '/' do
 end
 
 get '/username' do
+  @start = false
   erb  :username
 end
 
@@ -137,6 +138,7 @@ end
 
 get '/game/new' do
   self.player_name = nil
+  self.bet = 0
   redirect 'username'
 end
 
@@ -161,6 +163,19 @@ post '/game' do
   self.bet = bet_input
   deduct_bet
   redirect '/game'
+end
+
+get '/game/bet' do
+  amount = params[:amount].to_i
+  amounts = [10,20,50,100]
+  if amounts.include?(amount) && valid_bet?(bet + amount)
+    self.bet += amount
+    deduct_bet
+    redirect '/game'
+  else
+    erb :game
+  end
+
 end
 
 post '/game/playermove' do
