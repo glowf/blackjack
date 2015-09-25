@@ -261,12 +261,12 @@ get '/game/results' do
             end
   if bet > 0  #make sure no money is added if user hits refresh
     case @result
-      when "player"
-        self.balance += bet * 2
-      when "blackjack"
-        self.balance += bet * 3
-      when "push"
-        return_bet
+    when "player"
+      self.balance += bet * 2
+    when "blackjack"
+      self.balance += bet * 3
+    when "push"
+      return_bet
     end
     self.bet = 0
   end
